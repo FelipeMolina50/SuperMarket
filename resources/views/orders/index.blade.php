@@ -183,24 +183,17 @@
                                 <span class="text-xs font-bold">Escáner Físico Activo</span>
                             </div>
                         </div>
+                        @foreach($products as $prod)
                         <div class="product-item-card">
                             <div>
-                                <p class="font-bold">Logitech MX Master 3S</p>
-                                <p class="text-sm text-slate-500">$99.99 • Stock: 145</p>
+                                <p class="font-bold">{{ $prod->name }}</p>
+                                <p class="text-sm text-slate-500">${{ number_format($prod->price, 2) }} • Stock: {{ $prod->stock }}</p>
                             </div>
-                            <button class="btn-primary-blue" style="width: 40px; height: 40px; padding: 0; flex-shrink: 0;" onclick="addToCart('Logitech MX Master 3S', 99.99)">
+                            <button class="btn-primary-blue" style="width: 40px; height: 40px; padding: 0; flex-shrink: 0;" onclick="addToCart('{{ $prod->name }}', {{ $prod->price }})">
                                 <i data-lucide="plus" class="w-4 h-4"></i>
                             </button>
                         </div>
-                        <div class="product-item-card">
-                            <div>
-                                <p class="font-bold">Teclado Mecánico K9</p>
-                                <p class="text-sm text-slate-500">$129.50 • Stock: 50</p>
-                            </div>
-                            <button class="btn-primary-blue" style="width: 40px; height: 40px; padding: 0; flex-shrink: 0;" onclick="addToCart('Teclado Mecánico K9', 129.50)">
-                                <i data-lucide="plus" class="w-4 h-4"></i>
-                            </button>
-                        </div>
+                        @endforeach
                     </div>
 
                     <div class="order-summary-panel">
@@ -322,6 +315,7 @@
         let selectedPayMethod = null;
         
         let orders = @json($orders);
+        let productsList = @json($products);
 
         // Lógica para Escáner de Mano (HID)
         let barcodeBuffer = "";
@@ -345,14 +339,13 @@
 
         function processBarcode(code) {
             console.log("Código escaneado:", code);
-            if (code === "123456789") {
-                addToCart('Logitech MX Master 3S', 99.99);
-            } else if (code === "987654321") {
-                addToCart('Teclado Mecánico K9', 129.50);
+            const p = productsList.find(prod => prod.sku === code);
+            if (p) {
+                addToCart(p.name, parseFloat(p.price));
             } else {
                 const toast = document.createElement('div');
                 toast.style = "position: fixed; bottom: 2rem; right: 2rem; background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 1rem; z-index: 9999; font-weight: bold; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);";
-                toast.innerText = `Producto no encontrado: ${code}`;
+                toast.innerText = `Producto no encontrado (SKU: ${code})`;
                 document.body.appendChild(toast);
                 setTimeout(() => toast.remove(), 3000);
             }

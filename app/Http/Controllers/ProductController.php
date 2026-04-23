@@ -23,7 +23,17 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
         ]);
 
-        Product::create($request->all());
+        $product = Product::create($request->all());
+        
+        if ($request->stock > 0) {
+            $product->movements()->create([
+                'type' => 'entry',
+                'quantity' => $request->stock,
+                'description' => 'Stock inicial manual'
+            ]);
+            $product->updateStockFromMovements();
+        }
+
         return back()->with('success', 'Producto agregado con éxito');
     }
 
@@ -37,7 +47,27 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
         ]);
 
+        $oldStock = $product->stock;
+        
         $product->update($request->all());
+
+        $newStock = $request->stock;
+        if ($newStock > $oldStock) {
+            $product->movements()->create([
+                'type' => 'entry',
+                'quantity' => $newStock - $oldStock,
+                'description' => 'Ajuste manual (Entrada)'
+            ]);
+            $product->updateStockFromMovements();
+        } elseif ($newStock < $oldStock) {
+            $product->movements()->create([
+                'type' => 'exit',
+                'quantity' => $oldStock - $newStock,
+                'description' => 'Ajuste manual (Salida)'
+            ]);
+            $product->updateStockFromMovements();
+        }
+
         return back()->with('success', 'Producto actualizado con éxito');
     }
 

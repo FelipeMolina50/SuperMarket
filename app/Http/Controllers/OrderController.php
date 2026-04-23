@@ -10,7 +10,8 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::orderBy('id', 'desc')->get();
-        return view('orders.index', compact('orders'));
+        $products = \App\Models\Product::where('stock', '>', 0)->get();
+        return view('orders.index', compact('orders', 'products'));
     }
 
     public function store(Request $request)
@@ -28,6 +29,22 @@ class OrderController extends Controller
             'status' => $request->status ?? 'Completado',
             'cart_items' => $request->cart_items,
         ]);
+
+        if (is_array($request->cart_items)) {
+            foreach ($request->cart_items as $item) {
+                if (isset($item['name'])) {
+                    $product = \App\Models\Product::where('name', $item['name'])->first();
+                    if ($product) {
+                        $product->movements()->create([
+                            'type' => 'exit',
+                            'quantity' => 1, // El carrito frontend agrega 1 por click
+                            'description' => 'Venta en Pedido #' . $order->id,
+                        ]);
+                        $product->updateStockFromMovements();
+                    }
+                }
+            }
+        }
 
         return response()->json(['success' => true, 'order' => $order]);
     }
