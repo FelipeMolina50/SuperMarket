@@ -9,7 +9,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::orderBy('id', 'desc')->get();
+        $products = auth()->user()->products()->orderBy('id', 'desc')->get();
         return view('inventory.index', compact('products'));
     }
 
@@ -23,7 +23,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
         ]);
 
-        $product = Product::create($request->all());
+        $product = auth()->user()->products()->create($request->all());
         
         if ($request->stock > 0) {
             $product->movements()->create([
@@ -39,6 +39,10 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
+        if ($product->user_id !== auth()->id()) {
+            abort(403, 'No tienes permiso para actualizar este producto.');
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'required|string|unique:products,sku,'.$product->id,
@@ -73,6 +77,10 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        if ($product->user_id !== auth()->id()) {
+            abort(403, 'No tienes permiso para eliminar este producto.');
+        }
+
         $product->delete();
         return back()->with('success', 'Producto eliminado');
     }

@@ -74,4 +74,13 @@ class User extends Authenticatable
         $initial = strtoupper(substr($this->name ?? 'U', 0, 1));
         return '<div class="avatar-img" style="width:'.$size.'; height:'.$size.'; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; font-size:'.$text.'; color:#64748b; font-weight:bold; border: 2px solid white; box-shadow: 0 1px 2px rgba(0,0,0,0.1); cursor:pointer;">'.$initial.'</div>';
     }
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

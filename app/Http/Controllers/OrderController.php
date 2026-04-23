@@ -9,8 +9,8 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::orderBy('id', 'desc')->get();
-        $products = \App\Models\Product::where('stock', '>', 0)->get();
+        $orders = auth()->user()->orders()->orderBy('id', 'desc')->get();
+        $products = auth()->user()->products()->where('stock', '>', 0)->get();
         return view('orders.index', compact('orders', 'products'));
     }
 
@@ -23,7 +23,7 @@ class OrderController extends Controller
             'status' => 'nullable|string'
         ]);
 
-        $order = Order::create([
+        $order = auth()->user()->orders()->create([
             'customer' => $request->customer ?? 'Cliente General',
             'total' => $request->total,
             'status' => $request->status ?? 'Completado',
@@ -33,7 +33,7 @@ class OrderController extends Controller
         if (is_array($request->cart_items)) {
             foreach ($request->cart_items as $item) {
                 if (isset($item['name'])) {
-                    $product = \App\Models\Product::where('name', $item['name'])->first();
+                    $product = auth()->user()->products()->where('name', $item['name'])->first();
                     if ($product) {
                         $product->movements()->create([
                             'type' => 'exit',

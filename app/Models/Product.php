@@ -10,7 +10,12 @@ class Product extends Model
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory;
 
-    protected $fillable = ['name', 'sku', 'cat', 'stock', 'price'];
+    protected $fillable = ['user_id', 'name', 'sku', 'cat', 'stock', 'price'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function movements()
     {
