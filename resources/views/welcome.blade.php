@@ -254,9 +254,7 @@
     <div class="container">
         {{-- Brand --}}
         <a class="navbar-brand d-flex align-items-center gap-2 text-decoration-none" href="/">
-            <div class="navbar-brand-logo">
-                <i class="bi bi-box-seam text-white fs-5"></i>
-            </div>
+            <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" style="height: 42px; width: auto; object-fit: contain;">
             <span class="text-white">ValleStock</span>
         </a>
 
@@ -393,9 +391,7 @@
             {{-- Brand --}}
             <div class="col-12 col-md-5">
                 <div class="d-flex align-items-center gap-2 mb-3">
-                    <div class="footer-logo-box">
-                        <i class="bi bi-box-seam text-white"></i>
-                    </div>
+                    <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" style="height: 36px; width: auto; object-fit: contain;">
                     <span class="fw-bold font-display" style="font-size:1.1rem;">
                         ValleStock
                     </span>

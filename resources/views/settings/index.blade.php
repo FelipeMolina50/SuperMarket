@@ -55,7 +55,7 @@
 <body class="flex min-h-screen">
     <aside class="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-logo-box"><i data-lucide="package" style="color: white;"></i></div>
+            <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" style="height: 38px; width: auto; object-fit: contain;">
             <span class="font-display" style="color: white; font-weight: 700; font-size: 1.25rem;">ValleStock</span>
         </div>
         <nav class="sidebar-nav">

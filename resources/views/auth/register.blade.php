@@ -173,11 +173,9 @@
 
                 <div class="anim-scale">
                     <div class="d-flex justify-content-center mb-4">
-                        <div class="panel-shield">
-                            <i class="bi bi-shield-check"></i>
-                        </div>
+                        <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" style="height: 80px; width: auto; object-fit: contain;">
                     </div>
-                    <h1 class="text-white fw-bold mb-2" style="font-size:3rem; letter-spacing:-.02em;">SmartStock</h1>
+                    <h1 class="text-white fw-bold mb-2" style="font-size:3rem; letter-spacing:-.02em;">ValleStock</h1>
                     <p class="mb-5" style="color:#bfdbfe; font-size:1.1rem;">
                         Únase a una forma más inteligente de gestionar su inventario.
                     </p>
