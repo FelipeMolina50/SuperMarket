@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuración - Stocky</title>
+    <title>Configuración - ValleStock</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -56,7 +56,7 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo-box"><i data-lucide="package" style="color: white;"></i></div>
-            <span class="font-display" style="color: white; font-weight: 700; font-size: 1.25rem;">Stocky</span>
+            <span class="font-display" style="color: white; font-weight: 700; font-size: 1.25rem;">ValleStock</span>
         </div>
         <nav class="sidebar-nav">
             <a href="{{ route('dashboard') }}" class="nav-item"><i data-lucide="layout-dashboard"></i> Panel de Control</a>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedidos - Stocky</title>
+    <title>Pedidos - ValleStock</title>
     <!-- Tailwind CSS para la estructura general -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -80,7 +80,7 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo-box"><i data-lucide="package" style="color: white;"></i></div>
-            <span class="font-display" style="color: white; font-weight: 700; font-size: 1.25rem;">Stocky</span>
+            <span class="font-display" style="color: white; font-weight: 700; font-size: 1.25rem;">ValleStock</span>
         </div>
         <nav class="sidebar-nav">
             <a href="{{ route('dashboard') }}" class="nav-item"><i data-lucide="layout-dashboard"></i> Panel de Control</a>
@@ -261,7 +261,7 @@
                     <div class="invoice-box">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 2rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 1rem;">
                             <div>
-                                <h4 class="font-bold">Stocky</h4>
+                                <h4 class="font-bold">ValleStock</h4>
                                 <p class="text-xs text-slate-500">NIT: 900.123.456-1</p>
                             </div>
                             <div style="text-align: right;">
@@ -522,7 +522,7 @@
             const link = document.createElement("a");
             const url = URL.createObjectURL(blob);
             link.setAttribute("href", url);
-            link.setAttribute("download", "pedidos_stocky.csv");
+            link.setAttribute("download", "pedidos_vallestock.csv");
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
@@ -535,7 +535,7 @@
             
             const opt = {
                 margin:       0.5,
-                filename:     `Factura_${invoiceId}_Stocky.pdf`,
+                filename:     `Factura_${invoiceId}_ValleStock.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2 },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }

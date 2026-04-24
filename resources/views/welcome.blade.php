@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SmartInventory Pro</title>
+    <title>ValleStock</title>
 
     {{-- Bootstrap 5 --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -257,7 +257,7 @@
             <div class="navbar-brand-logo">
                 <i class="bi bi-box-seam text-white fs-5"></i>
             </div>
-            <span class="text-white">SmartInventory <span style="color: var(--brand-primary)">Pro</span></span>
+            <span class="text-white">ValleStock</span>
         </a>
 
         {{-- Toggler móvil --}}
@@ -373,7 +373,7 @@
                     ¿Listo para transformar tu gestión de inventario?
                 </h2>
                 <p class="mb-5" style="color: #cbd5e1; font-size:1.05rem; line-height:1.7;">
-                    Únete a miles de empresas que ya están optimizando sus procesos con SmartInventory Pro.
+                    Únete a miles de empresas que ya están optimizando sus procesos con ValleStock.
                     Prueba gratuita de 14 días, sin tarjeta de crédito.
                 </p>
                 <a href="{{ route('register') }}" class="btn-cta-white">
@@ -397,7 +397,7 @@
                         <i class="bi bi-box-seam text-white"></i>
                     </div>
                     <span class="fw-bold font-display" style="font-size:1.1rem;">
-                        SmartInventory <span style="color:var(--brand-primary)">Pro</span>
+                        ValleStock
                     </span>
                 </div>
                 <p class="footer-link" style="max-width:320px; line-height:1.7;">
@@ -430,7 +430,7 @@
 
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 pt-3 pb-2">
             <p class="footer-link mb-0" style="font-size:.85rem;">
-                © {{ date('Y') }} SmartInventory Pro. Todos los derechos reservados.
+                © {{ date('Y') }} ValleStock. Todos los derechos reservados.
             </p>
             <div class="d-flex gap-4">
                 <a href="#" class="footer-link" style="font-size:.85rem;">Privacidad</a>

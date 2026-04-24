@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control - Stocky</title>
+    <title>Panel de Control - ValleStock</title>
     <!-- Cargando Tailwind CSS por CDN para que soporten las clases (flex, p-8, gap-4, etc.) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -191,7 +191,7 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo-box"><i data-lucide="package" style="color: white;"></i></div>
-            <span class="font-display" style="color: white; font-weight: 700; font-size: 1.25rem;">Stocky</span>
+            <span class="font-display" style="color: white; font-weight: 700; font-size: 1.25rem;">ValleStock</span>
         </div>
         <nav class="sidebar-nav">
             <a href="{{ route('dashboard') }}" class="nav-item active"><i data-lucide="layout-dashboard"></i> Panel de Control</a>
@@ -312,7 +312,7 @@
                     <i data-lucide="building-2" style="width: 2rem; height: 2rem;"></i>
                 </div>
                 <h2 class="font-display" style="font-size: 1.5rem; font-weight: 700; color: #0f172a;">Configura tu Empresa</h2>
-                <p style="color: #64748b; margin-top: 0.5rem; font-size: 0.875rem;">Para comenzar a usar Stocky, necesitamos algunos datos básicos.</p>
+                <p style="color: #64748b; margin-top: 0.5rem; font-size: 0.875rem;">Para comenzar a usar ValleStock, necesitamos algunos datos básicos.</p>
             </div>
             
             <form action="{{ route('profile.setup') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.5rem;">
