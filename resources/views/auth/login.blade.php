@@ -197,8 +197,7 @@
 
                 {{-- Logo --}}
                 <div class="d-flex align-items-center gap-3 mb-5">
-                    <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" style="height: 52px; width: auto; object-fit: contain;">
-                    <span class="brand-name">ValleStock</span>
+                    <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" style="height: 80px; width: auto; object-fit: contain;">
                 </div>
 
                 {{-- Headline --}}
@@ -220,7 +219,7 @@
 
                     {{-- Card header --}}
                     <div class="text-center mb-4">
-                        <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" class="mb-3 d-block" style="height: 3.5rem; width: auto; object-fit: contain;">
+                        <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" class="mb-3 d-block mx-auto" style="height: 5.5rem; width: auto; object-fit: contain;">
                         <h2 class="font-display text-white fw-bold fs-3 mb-0">Acceso Smart Premium</h2>
                     </div>
 

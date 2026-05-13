@@ -190,8 +190,7 @@
 <body class="flex">
     <aside class="sidebar">
         <div class="sidebar-header">
-            <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" style="height: 38px; width: auto; object-fit: contain;">
-            <span class="font-display" style="color: white; font-weight: 700; font-size: 1.25rem;">ValleStock</span>
+            <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" style="height: 60px; width: auto; object-fit: contain;">
         </div>
         <nav class="sidebar-nav">
             <a href="{{ route('dashboard') }}" class="nav-item active"><i data-lucide="layout-dashboard"></i> Panel de Control</a>

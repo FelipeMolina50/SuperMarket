@@ -254,8 +254,7 @@
     <div class="container">
         {{-- Brand --}}
         <a class="navbar-brand d-flex align-items-center gap-2 text-decoration-none" href="/">
-            <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" style="height: 42px; width: auto; object-fit: contain;">
-            <span class="text-white">ValleStock</span>
+            <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" style="height: 60px; width: auto; object-fit: contain;">
         </a>
 
         {{-- Toggler móvil --}}
@@ -391,10 +390,7 @@
             {{-- Brand --}}
             <div class="col-12 col-md-5">
                 <div class="d-flex align-items-center gap-2 mb-3">
-                    <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" style="height: 36px; width: auto; object-fit: contain;">
-                    <span class="fw-bold font-display" style="font-size:1.1rem;">
-                        ValleStock
-                    </span>
+                    <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" style="height: 55px; width: auto; object-fit: contain;">
                 </div>
                 <p class="footer-link" style="max-width:320px; line-height:1.7;">
                     La solución definitiva para el control de inventario inteligente. Diseñada para escalar negocios de todos los tamaños.

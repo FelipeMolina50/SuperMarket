@@ -173,9 +173,8 @@
 
                 <div class="anim-scale">
                     <div class="d-flex justify-content-center mb-4">
-                        <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" style="height: 80px; width: auto; object-fit: contain;">
+                        <img src="{{ asset('images/logo.png') }}" alt="ValleStock Logo" style="height: 140px; width: auto; object-fit: contain; margin-bottom: 1.5rem;">
                     </div>
-                    <h1 class="text-white fw-bold mb-2" style="font-size:3rem; letter-spacing:-.02em;">ValleStock</h1>
                     <p class="mb-5" style="color:#bfdbfe; font-size:1.1rem;">
                         Únase a una forma más inteligente de gestionar su inventario.
                     </p>
