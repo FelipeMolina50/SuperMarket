@@ -68,7 +68,7 @@
                     <i data-lucide="calendar" class="w-4 h-4"></i> Últimos 6 Meses
                 </button>
                 <div class="relative group flex items-center">
-                    {{ auth()->user()->avatarHtml('40px', '1.25rem') }}
+                    {!! auth()->user()->avatarHtml('40px', '1.25rem') !!}
                     <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-slate-200 hidden group-hover:block z-50">
                         <div class="px-4 py-2 text-sm text-slate-700 border-b border-slate-100 font-medium">
                             {{ auth()->user()->name ?? 'Administrador' }}

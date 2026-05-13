@@ -84,7 +84,7 @@
             
             <div class="flex items-center gap-4">
                 <div class="relative group flex items-center">
-                    {{ auth()->user()->avatarHtml('40px', '1.25rem') }}
+                    {!! auth()->user()->avatarHtml('40px', '1.25rem') !!}
                     <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-slate-200 hidden group-hover:block z-50">
                         <div class="px-4 py-2 text-sm text-slate-700 border-b border-slate-100 font-medium">
                             {{ auth()->user()->name ?? 'Administrador' }}
@@ -145,7 +145,11 @@
                         @foreach($products as $p)
                         <tr>
                             <td class="flex items-center gap-3">
-                                <div class="product-img-placeholder"><i data-lucide="image" style="width:16px;"></i></div>
+                                @if($p->image_path)
+                                    <div class="product-img-placeholder" style="background-image: url('{{ asset('storage/' . $p->image_path) }}'); background-size: cover; background-position: center; border: 1px solid #e2e8f0;"></div>
+                                @else
+                                    <div class="product-img-placeholder"><i data-lucide="image" style="width:16px;"></i></div>
+                                @endif
                                 <div>
                                     <p class="font-bold text-slate-800 text-sm">{{ $p->name }}</p>
                                     <p class="text-xs text-slate-500">Almacén Principal</p>
@@ -192,7 +196,7 @@
     <div id="productModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 1rem;">
         <div style="background: white; border-radius: 1.5rem; width: 100%; max-width: 500px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
             <h2 id="productModalTitle" class="text-xl font-display font-bold text-slate-900 mb-4">Añadir Producto</h2>
-            <form id="productForm" method="POST" action="{{ route('inventory.store') }}">
+            <form id="productForm" method="POST" action="{{ route('inventory.store') }}" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="_method" id="method_field" value="POST">
                 <input type="hidden" id="editProductId">
@@ -220,6 +224,11 @@
                             <label class="block text-sm font-bold text-slate-700 mb-1">Precio ($)</label>
                             <input type="number" name="price" id="prodPrice" step="0.01" required class="input-field" placeholder="0.00">
                         </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-1">Imagen del Producto (Opcional)</label>
+                        <input type="file" name="image" id="prodImage" accept="image/*" class="input-field" style="padding: 0.5rem;">
+                        <p class="text-xs text-slate-500 mt-1">Formatos: JPG, PNG, WEBP (Máx: 2MB). Al editar, subir una nueva reemplazará la anterior.</p>
                     </div>
                 </div>
                 <div class="flex gap-4 mt-6">
@@ -270,6 +279,7 @@
             document.getElementById('prodCat').value = p.cat;
             document.getElementById('prodStock').value = p.stock;
             document.getElementById('prodPrice').value = p.price;
+            document.getElementById('prodImage').value = ''; // Resetear el input file al editar
             document.getElementById('productModalTitle').innerText = 'Editar Producto';
             
             document.getElementById('productForm').action = "/inventory/" + id;

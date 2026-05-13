@@ -12,9 +12,15 @@ class DashboardController extends Controller
     {
         $totalOrders = auth()->user()->orders()->count();
         $totalRevenue = auth()->user()->orders()->sum('total');
-        $lowStockProducts = auth()->user()->products()->where('stock', '<', 10)->count();
+        
+        $dailySales = auth()->user()->orders()
+            ->select('date', \DB::raw('SUM(total) as daily_total'), \DB::raw('COUNT(id) as total_orders'))
+            ->groupBy('date')
+            ->orderBy('date', 'desc')
+            ->take(7)
+            ->get();
 
-        return view('dashboard', compact('totalOrders', 'totalRevenue', 'lowStockProducts'));
+        return view('dashboard', compact('totalOrders', 'totalRevenue', 'dailySales'));
     }
 
     public function reports()

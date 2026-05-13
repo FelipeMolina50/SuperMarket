@@ -48,4 +48,20 @@ class OrderController extends Controller
 
         return response()->json(['success' => true, 'order' => $order]);
     }
+
+    public function searchBarcode(Request $request)
+    {
+        $request->validate(['sku' => 'required|string']);
+        
+        $product = auth()->user()->products()
+            ->where('sku', $request->sku)
+            ->where('stock', '>', 0)
+            ->first();
+
+        if ($product) {
+            return response()->json(['success' => true, 'product' => $product]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Producto no encontrado o sin stock.']);
+    }
 }

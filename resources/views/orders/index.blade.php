@@ -101,7 +101,7 @@
                 
                 {{-- Dropdown de Perfil Integrado --}}
                 <div class="relative group flex items-center">
-                    {{ auth()->user()->avatarHtml('40px', '1.25rem') }}
+                    {!! auth()->user()->avatarHtml('40px', '1.25rem') !!}
                     <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-slate-200 hidden group-hover:block z-50">
                         <div class="px-4 py-2 text-sm text-slate-700 border-b border-slate-100 font-medium">
                             {{ auth()->user()->name ?? 'Administrador' }}
@@ -177,9 +177,10 @@
                     <div>
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-bold text-slate-700">Productos Disponibles</h3>
-                            <div class="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 rounded-full border border-blue-100">
+                            <div class="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 rounded-full border border-blue-100" style="position: relative;">
                                 <i data-lucide="barcode" class="w-4 h-4"></i>
                                 <span class="text-xs font-bold">Escáner Físico Activo</span>
+                                <input type="text" id="scannerInput" autofocus style="position: absolute; opacity: 0; left: -9999px;" autocomplete="off">
                             </div>
                         </div>
                         @foreach($products as $prod)
@@ -317,37 +318,90 @@
         let productsList = @json($products);
 
         // Lógica para Escáner de Mano (HID)
-        let barcodeBuffer = "";
-        let lastKeyTime = Date.now();
-
-        window.addEventListener('keydown', (e) => {
-            const currentTime = Date.now();
-            if (currentTime - lastKeyTime > 100) {
-                barcodeBuffer = "";
+        const scannerInput = document.getElementById('scannerInput');
+        
+        // Mantener el foco al hacer clic en cualquier parte
+        document.addEventListener('click', () => {
+            if (document.getElementById('orderModal').style.display === 'flex' && 
+                document.getElementById('stepSelection').style.display !== 'none') {
+                scannerInput.focus();
             }
-            if (e.key === 'Enter') {
-                if (barcodeBuffer.length > 2) {
-                    processBarcode(barcodeBuffer);
-                    barcodeBuffer = "";
-                }
-            } else if (e.key.length === 1) {
-                barcodeBuffer += e.key;
-            }
-            lastKeyTime = currentTime;
         });
+
+        if (scannerInput) {
+            scannerInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const code = scannerInput.value.trim();
+                    if (code.length > 0) {
+                        processBarcode(code);
+                    }
+                    scannerInput.value = "";
+                }
+            });
+            // Mantener el foco automáticamente si se pierde accidentalmente
+            scannerInput.addEventListener('blur', () => {
+                if (document.getElementById('orderModal').style.display === 'flex' && 
+                    document.getElementById('stepSelection').style.display !== 'none') {
+                    setTimeout(() => scannerInput.focus(), 50);
+                }
+            });
+        }
+
+        // Generador de sonidos nativos
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'success') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(800, audioCtx.currentTime); // Agudo
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.15); // Corto
+            } else {
+                oscillator.type = 'square';
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime); // Grave
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.3); // Largo
+            }
+        }
 
         function processBarcode(code) {
             console.log("Código escaneado:", code);
-            const p = productsList.find(prod => prod.sku === code);
-            if (p) {
-                addToCart(p.name, parseFloat(p.price));
-            } else {
-                const toast = document.createElement('div');
-                toast.style = "position: fixed; bottom: 2rem; right: 2rem; background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 1rem; z-index: 9999; font-weight: bold; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);";
-                toast.innerText = `Producto no encontrado (SKU: ${code})`;
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 3000);
-            }
+            
+            fetch('{{ route("orders.searchBarcode") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ sku: code })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.product) {
+                    playSound('success');
+                    addToCart(data.product.name, parseFloat(data.product.price));
+                } else {
+                    playSound('error');
+                    const toast = document.createElement('div');
+                    toast.style = "position: fixed; bottom: 2rem; right: 2rem; background: #ef4444; color: white; padding: 1rem 2rem; border-radius: 1rem; z-index: 9999; font-weight: bold; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);";
+                    toast.innerText = data.message || `Producto no encontrado (SKU: ${code})`;
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 3000);
+                }
+            })
+            .catch(err => {
+                console.error("Error buscando producto:", err);
+                playSound('error');
+            });
         }
 
         function renderOrders() {
@@ -358,6 +412,9 @@
         function openModal() {
             document.getElementById('orderModal').style.display = 'flex';
             goToSelection();
+            setTimeout(() => {
+                if(document.getElementById('scannerInput')) document.getElementById('scannerInput').focus();
+            }, 100);
         }
 
         function closeModal() {

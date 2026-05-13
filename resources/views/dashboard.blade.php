@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Control - ValleStock</title>
     <!-- Cargando Tailwind CSS por CDN para que soporten las clases (flex, p-8, gap-4, etc.) -->
-    <script src="https://cdn.tailwindcss.com" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/lucide@0.372.0/dist/umd/lucide.min.js" integrity="sha384-HCH5m/0J0+Yf9hE8K4JbY7Y7e9vXf5vF5vF5vF5vF5vF5vF5vF5vF5vF5vF5vF5v" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js" integrity="sha384-Sre473k0+8CHevUeHkFmC2D9f7/1L6L6L6L6L6L6L6L6L6L6L6L6L6L6L6L6" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@0.372.0/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -231,7 +231,7 @@
                 
                 {{-- Dropdown de Perfil Integrado con Laravel --}}
                 <div class="relative group">
-                    {{ auth()->user()->avatarHtml('40px', '1.25rem') }}
+                    {!! auth()->user()->avatarHtml('40px', '1.25rem') !!}
                     
                     <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-slate-200 hidden group-hover:block z-50">
                         <div class="px-4 py-2 text-sm text-slate-700 border-b border-slate-100 font-medium">
@@ -261,9 +261,48 @@
                 </div>
             </div>
 
-            <div class="chart-container">
-                <h3 class="font-display mb-6 font-bold text-lg text-slate-800">Tendencias de Ventas</h3>
-                <canvas id="salesChart" style="max-height: 300px;"></canvas>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Tabla de Informes Diarios -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-display font-bold text-lg text-slate-800">Informes de Compra por Día</h3>
+                        <div class="p-2 bg-blue-50 rounded-lg"><i data-lucide="calendar" class="w-5 h-5 text-blue-500"></i></div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-100">
+                                    <th class="py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Fecha</th>
+                                    <th class="py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Cant. Pedidos</th>
+                                    <th class="py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($dailySales ?? [] as $sale)
+                                <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                    <td class="py-3 px-4 text-sm text-slate-800 font-medium">{{ \Carbon\Carbon::parse($sale->date)->format('d M, Y') }}</td>
+                                    <td class="py-3 px-4 text-sm text-slate-600">
+                                        <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-1 rounded-md text-xs font-semibold">
+                                            {{ $sale->total_orders }}
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4 text-sm font-bold text-slate-800 text-right">${{ number_format($sale->daily_total, 2) }}</td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="3" class="py-8 text-center text-slate-500 text-sm">No hay datos de ventas recientes</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Tendencias -->
+                <div class="chart-container">
+                    <h3 class="font-display mb-6 font-bold text-lg text-slate-800">Tendencias de Ventas</h3>
+                    <canvas id="salesChart" style="max-height: 300px;"></canvas>
+                </div>
             </div>
         </div>
     </main>
@@ -285,16 +324,26 @@
         });
 
         // Cargar Estadísticas
-        // Values injected by blade
+        @php
+            $chartData = collect($dailySales ?? [])->sortBy('date')->values();
+            $labels = $chartData->pluck('date')->map(fn($d) => \Carbon\Carbon::parse($d)->format('d M'))->toJson();
+            $data = $chartData->pluck('daily_total')->toJson();
+            
+            // Si no hay datos, mostrar algo de prueba para que el gráfico no se vea vacío
+            if ($chartData->isEmpty()) {
+                $labels = json_encode(['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun']);
+                $data = json_encode([0, 0, 0, 0, 0, 0]);
+            }
+        @endphp
 
         const ctx = document.getElementById('salesChart').getContext('2d');
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                labels: {!! $labels !!},
                 datasets: [{
-                    label: 'Ventas',
-                    data: [0, 0, 0, 0, 0, 0],
+                    label: 'Ventas ($)',
+                    data: {!! $data !!},
                     borderColor: '#3b82f6',
                     tension: 0.4,
                     fill: true,

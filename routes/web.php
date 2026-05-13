@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     // CRUD Inventario & Pedidos
     Route::resource('inventory', ProductController::class)->parameters(['inventory' => 'product'])->except(['create', 'show', 'edit']);
     Route::resource('orders', OrderController::class)->only(['index', 'store']);
+    Route::post('/orders/search-barcode', [OrderController::class, 'searchBarcode'])->name('orders.searchBarcode');
 
     // Settings & Profile
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');

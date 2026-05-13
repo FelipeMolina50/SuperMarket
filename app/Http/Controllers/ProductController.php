@@ -15,15 +15,20 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'required|string|unique:products,sku',
             'cat' => 'nullable|string|max:255',
             'stock' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        $product = auth()->user()->products()->create($request->all());
+        if ($request->hasFile('image')) {
+            $validatedData['image_path'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product = auth()->user()->products()->create($validatedData);
         
         if ($request->stock > 0) {
             $product->movements()->create([
@@ -41,17 +46,25 @@ class ProductController extends Controller
     {
         $this->authorize('update', $product);
 
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'required|string|unique:products,sku,'.$product->id,
             'cat' => 'nullable|string|max:255',
             'stock' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            if ($product->image_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image_path);
+            }
+            $validatedData['image_path'] = $request->file('image')->store('products', 'public');
+        }
 
         $oldStock = $product->stock;
         
-        $product->update($request->all());
+        $product->update($validatedData);
 
         $newStock = $request->stock;
         if ($newStock > $oldStock) {
