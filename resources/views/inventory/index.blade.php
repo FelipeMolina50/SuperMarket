@@ -196,6 +196,17 @@
     <div id="productModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 1rem;">
         <div style="background: white; border-radius: 1.5rem; width: 100%; max-width: 500px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
             <h2 id="productModalTitle" class="text-xl font-display font-bold text-slate-900 mb-4">Añadir Producto</h2>
+            
+            @if ($errors->any())
+                <div class="mb-4 bg-red-50 border border-red-200 text-red-600 rounded-lg p-4 text-sm">
+                    <ul class="list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form id="productForm" method="POST" action="{{ route('inventory.store') }}" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="_method" id="method_field" value="POST">
@@ -227,6 +238,13 @@
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-1">Imagen del Producto (Opcional)</label>
+                        
+                        <!-- Contenedor para previsualizar imagen actual al editar -->
+                        <div id="currentImageContainer" style="display: none;" class="mb-2 flex items-center gap-3">
+                            <img id="currentImagePreview" src="" alt="Actual" class="w-12 h-12 rounded-lg object-cover border border-slate-200">
+                            <span class="text-xs text-slate-500 font-medium">Imagen actual</span>
+                        </div>
+
                         <input type="file" name="image" id="prodImage" accept="image/*" class="input-field" style="padding: 0.5rem;">
                         <p class="text-xs text-slate-500 mt-1">Formatos: JPG, PNG, WEBP (Máx: 2MB). Al editar, subir una nueva reemplazará la anterior.</p>
                     </div>
@@ -243,6 +261,13 @@
         lucide.createIcons();
         
         let products = @json($products);
+
+        @if ($errors->any())
+            // Abrir el modal automáticamente si hubo errores de validación
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('productModal').style.display = 'flex';
+            });
+        @endif
 
         function filterTable(val) {
             const lower = val.toLowerCase();
@@ -263,6 +288,7 @@
             document.getElementById('productForm').action = "{{ route('inventory.store') }}";
             document.getElementById('method_field').value = "POST";
             document.getElementById('productModalTitle').innerText = 'Añadir Producto';
+            document.getElementById('currentImageContainer').style.display = 'none';
             document.getElementById('productModal').style.display = 'flex';
         }
 
@@ -280,6 +306,14 @@
             document.getElementById('prodStock').value = p.stock;
             document.getElementById('prodPrice').value = p.price;
             document.getElementById('prodImage').value = ''; // Resetear el input file al editar
+            
+            if (p.image_path) {
+                document.getElementById('currentImagePreview').src = "{{ asset('storage') }}/" + p.image_path;
+                document.getElementById('currentImageContainer').style.display = 'flex';
+            } else {
+                document.getElementById('currentImageContainer').style.display = 'none';
+            }
+
             document.getElementById('productModalTitle').innerText = 'Editar Producto';
             
             document.getElementById('productForm').action = "/inventory/" + id;
