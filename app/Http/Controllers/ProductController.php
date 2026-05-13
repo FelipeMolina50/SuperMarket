@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
@@ -44,7 +45,7 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        $this->authorize('update', $product);
+        Gate::authorize('update', $product);
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -88,7 +89,7 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        $this->authorize('delete', $product);
+        Gate::authorize('delete', $product);
 
         $product->delete();
         return back()->with('success', 'Producto eliminado');
