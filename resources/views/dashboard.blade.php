@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Control - ValleStock</title>
     <!-- Cargando Tailwind CSS por CDN para que soporten las clases (flex, p-8, gap-4, etc.) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/lucide@0.372.0/dist/umd/lucide.min.js" integrity="sha384-HCH5m/0J0+Yf9hE8K4JbY7Y7e9vXf5vF5vF5vF5vF5vF5vF5vF5vF5vF5vF5vF5v" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js" integrity="sha384-Sre473k0+8CHevUeHkFmC2D9f7/1L6L6L6L6L6L6L6L6L6L6L6L6L6L6L6L6" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -229,7 +231,7 @@
                 
                 {{-- Dropdown de Perfil Integrado con Laravel --}}
                 <div class="relative group">
-                    {!! auth()->user()->avatarHtml('40px', '1.25rem') !!}
+                    {{ auth()->user()->avatarHtml('40px', '1.25rem') }}
                     
                     <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-slate-200 hidden group-hover:block z-50">
                         <div class="px-4 py-2 text-sm text-slate-700 border-b border-slate-100 font-medium">

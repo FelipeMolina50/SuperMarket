@@ -39,9 +39,7 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        if ($product->user_id !== auth()->id()) {
-            abort(403, 'No tienes permiso para actualizar este producto.');
-        }
+        $this->authorize('update', $product);
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -77,9 +75,7 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        if ($product->user_id !== auth()->id()) {
-            abort(403, 'No tienes permiso para eliminar este producto.');
-        }
+        $this->authorize('delete', $product);
 
         $product->delete();
         return back()->with('success', 'Producto eliminado');

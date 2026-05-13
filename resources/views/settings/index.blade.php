@@ -76,7 +76,7 @@
                 
                 {{-- Dropdown de Perfil Integrado en Laravel --}}
                 <div class="relative group flex items-center">
-                    {!! auth()->user()->avatarHtml('40px', '1.25rem') !!}
+                    {{ auth()->user()->avatarHtml('40px', '1.25rem') }}
                     <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-slate-200 hidden group-hover:block z-50">
                         <div class="px-4 py-2 text-sm text-slate-700 border-b border-slate-100 font-medium">
                             {{ auth()->user()->name ?? 'Administrador' }}
@@ -130,7 +130,7 @@
                         @csrf
                         <div class="flex items-center gap-6">
                             <div style="position: relative;" id="avatar_container">
-                                {!! auth()->user()->avatarHtml('100px', '3rem') !!}
+                                {{ auth()->user()->avatarHtml('100px', '3rem') }}
                                 <button type="button" onclick="document.getElementById('avatar_upload').click()" class="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-lg border border-slate-200 hover:bg-slate-50 transition">
                                     <i data-lucide="camera" class="w-4 h-4 text-slate-600"></i>
                                 </button>
